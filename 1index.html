@@ -1,0 +1,280 @@
+<html><head><base href="." /><title>Modern Cash Game Dashboard</title><style>
+:root {
+  --primary: #ff3b3b;
+  --secondary: #ffd700;
+  --bg: #1a1f2c;
+  --text: #ffffff;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-image {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  display: block;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px var(--secondary), 0 0 10px var(--secondary); }
+  to { text-shadow: 0 0 20px var(--secondary), 0 0 30px var(--primary); }
+}
+
+.winners-board {
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.winner-item {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 15px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  transform: translateX(-100%);
+  animation: slideIn 0.5s forwards;
+}
+
+@keyframes slideIn {
+  to { transform: translateX(0); }
+}
+
+.winner-avatar {
+  width: 50px;
+  height: 50px;
+  background: var(--primary);
+  border-radius: 50%;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.win-amount {
+  color: var(--secondary);
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--primary);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  transform: translateX(200%);
+  animation: slideInNotif 0.5s forwards;
+}
+
+@keyframes slideInNotif {
+  to { transform: translateX(0); }
+}
+
+.bonus-button {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  padding: 20px 40px;
+  font-size: 24px;
+  border-radius: 50px;
+  cursor: pointer;
+  display: block;
+  margin: 30px auto;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.bonus-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+}
+
+.bonus-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--bg);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  position: relative;
+  border: 2px solid var(--secondary);
+  max-width: 500px;
+  width: 90%;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.bonus-amount {
+  font-size: 48px;
+  color: var(--secondary);
+  margin: 20px 0;
+  text-shadow: 0 0 10px var(--secondary);
+}
+</style></head><body>
+
+<div class="dashboard">
+  <img class="hero-image" src="image\pro game.gif"" alt="Cash game winners celebrating with money, vibrant promotional image" width="800" height="400">
+  
+  <div class="header">
+    <h1>🎮 Real Cash Games</h1>
+    <h2>Live Winners Board</h2>
+  </div>
+
+  <button class="bonus-button" onclick="showBonus()">
+    Claim $750 Join Bonus
+  </button>
+
+  <div class="winners-board" id="winnersBoard">
+    <!-- Winners will be dynamically added here -->
+  </div>
+</div>
+
+<div class="modal" id="bonusModal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeBonus()">&times;</span>
+    <h2>Welcome Bonus</h2>
+    <div class="bonus-amount">$750</div>
+    <p>Create your account now to claim your welcome bonus!</p>
+    <button class="bonus-button" onclick="window.location.href='https://nx2bs.com/c?o=290&a=4432'">
+      Create Account
+    </button>
+  </div>
+</div>
+
+<script>
+const winSound = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjM1LjEwNAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAASAAAZYAAYGBgYJCQkJCQwMDAwMDw8PDw8SUlJSUlVVVVVVWFhYWFhbW1tbW15eXl5eYaGhoaGkpKSkpKenp6enqqqqqqqtra2trbDw8PDw8/Pz8/Pz29vb29vn5+fn5/Pz8/Pz//////8AAAAATGF2YzU4LjY1AAAAAAAAAAAAAAAAJAYAAAAAAAAAGWDc7BQeAAAAAAD/+9DEAAAJdAF39BAAJdPJbj8zNgE2TZtIxtbkAAg2NjiwNdQgcd//iPiI+WAQL//+WAYQ2CMvAxZrIX4v/EfxH8RF/ERBw4cOHDhnD9VbuI8OOXB58eXg8P/5QYIAAO3W1sxxGEogGAYg6Awg0AwgQ6Hy4FgaBwOCoVhQDQkFgDAEGwtFoGLiiLgsAgSBYuAEJAaEQJFgIASDgKFAEQUBAICACxUCAUEBVAwEgKBwEDIUAgGggAAYBACgGIIAo6iwLFVCgEAoGBgYrBgaEgwDAQAAP3/f+///2qqu5BAEAAAAf/QOAL/1qqv/u7lzuXVTEFNRTMuOTkuNaqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uAxPIALY5XXfmNgBO3yuvPMPAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
+
+function showBonus() {
+    const modal = document.getElementById('bonusModal');
+    modal.style.display = 'flex';
+}
+
+function closeBonus() {
+    const modal = document.getElementById('bonusModal');
+    modal.style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('bonusModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+const names = ['Player123', 'GameMaster', 'LuckyWinner', 'ProGamer', 'CashKing'];
+const games = ['Poker Rush', 'Lucky Dice', 'Spin Master', 'Card Quest'];
+
+function createWinnerItem(name, game, amount) {
+    const div = document.createElement('div');
+    div.className = 'winner-item';
+    div.innerHTML = `
+        <div class="winner-avatar">👑</div>
+        <div class="winner-info">
+            <h3>${name}</h3>
+            <p>Won playing ${game}</p>
+        </div>
+        <div class="win-amount">$${amount}</div>
+    `;
+    return div;
+}
+
+function showNotification(text) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = text;
+    document.body.appendChild(notification);
+    winSound.play();
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+function addNewWinner() {
+    const name = names[Math.floor(Math.random() * names.length)];
+    const game = games[Math.floor(Math.random() * games.length)];
+    const amount = Math.floor(Math.random() * 900) + 100;
+    
+    const winnersBoard = document.getElementById('winnersBoard');
+    const winnerItem = createWinnerItem(name, game, amount);
+    
+    winnersBoard.prepend(winnerItem);
+    showNotification(`${name} just won $${amount}!`);
+    
+    if (winnersBoard.children.length > 5) {
+        winnersBoard.removeChild(winnersBoard.lastChild);
+    }
+}
+
+// Initial winners
+for (let i = 0; i < 3; i++) {
+    addNewWinner();
+}
+
+// Add new winners periodically
+setInterval(addNewWinner, 5000);
+</script></body></html>
